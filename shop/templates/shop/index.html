@@ -6,18 +6,22 @@
 {% block body %}
 <!-- carousel -->
 <section id="reviews" class="py-3">
-  <div id="slider" class="carousel slide" data-ride="carousel">
+  {% for product , range ,nSlide in allProds%}
+  <div class="container">
+    <h1 >{{product.0.category}}</h1>
+  </div>
+  <div id="slider{{forloop.counter}}" class="carousel slide" data-ride="carousel">
     <div class="carousel-inner">
       <!-- carousel item -->
       <div class="carousel-item active">
         <div class="container">
           <div class="row">
             <div
-              class="col-sm-4 mx-auto d-flex justify-content-between review-item py-3"
+            class="col-sm-4 mx-auto d-flex justify-content-between review-item py-3"
             >
-              <div class="card">
-                <img
-                  class="card-img-top"
+            <div class="card">
+              <img
+              class="card-img-top"
                   src="/media/{{product.0.image}}"
                   alt="Card image cap"
                 />
@@ -31,7 +35,7 @@
               </div>
             </div>
             {% for i in product|slice:"1:" %}
-              <div class="col-sm-4 mx-auto d-flex justify-content-between review-item py-3">
+            <div class="col-sm-4 mx-auto d-flex justify-content-between review-item py-3">
                 <div class="card">
                   <img class="card-img-top" src="/media/{{i.image}}" alt="Card image cap"/>
                     <div class="card-body">
@@ -41,7 +45,7 @@
                         </p>
                       <a href="#" class="btn btn-primary">Buy</a>
                     </div>
-                </div>
+                  </div>
               </div>
               {% if forloop.counter|divisibleby:2 and forloop.counter > 0 and not forloop.last %}
                     </div>
@@ -51,7 +55,7 @@
                 <div class="carousel-item">
                   <div class="container">
                     <div class="row">
-              {% endif %} 
+                      {% endif %} 
             {% endfor %}
           </div>
         </div>
@@ -60,22 +64,23 @@
     </div>
     <!-- carousel control -->
     <a
-      href="#slider"
-      class="carousel-control-prev"
-      role="button"
-      data-slide="prev"
+    href="#slider{{forloop.counter}}"
+    class="carousel-control-prev"
+    role="button"
+    data-slide="prev"
     >
-      <span class="carousel-control-prev-icon bg-primary"></span>
-    </a>
-    <a
-      href="#slider"
-      class="carousel-control-next"
+    <span class="carousel-control-prev-icon bg-primary"></span>
+  </a>
+  <a
+  href="#slider{{forloop.counter}}"
+  class="carousel-control-next"
       role="button"
       data-slide="next"
     >
-      <span class="carousel-control-next-icon bg-primary"></span>
+    <span class="carousel-control-next-icon bg-primary"></span>
     </a>
   </div>
+  {% endfor %}
 </section>
 <!-- end of carousel -->
 {% endblock %}
