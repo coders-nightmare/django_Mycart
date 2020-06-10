@@ -35,11 +35,11 @@ def about(request):
 
 
 def contact(request):
-    return HttpResponse("we are at contact")
+    return render(request, 'shop/contact.html')
 
 
 def tracker(request):
-    return HttpResponse("we are at tracker")
+    return render(request, 'shop/tracker.html')
 
 
 def search(request):
