@@ -46,8 +46,10 @@ def search(request):
     return HttpResponse("we are at search")
 
 
-def productview(request):
-    return HttpResponse("we are at productview")
+def productview(request,myid):
+    # fetching the product using id
+    product = Product.objects.filter(id=myid)
+    return render(request, 'shop/productview.html',{'product':product[0]})
 
 
 def checkout(request):
