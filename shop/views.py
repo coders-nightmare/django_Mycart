@@ -1,23 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Product,Contact,Orders
+from .models import Product,Contact,Orders,OrderUpdate
 from math import ceil
-# Create your views here.
-
+import json
 
 def index(request):
     products = Product.objects.all()
-    print(products)
-    # n = len(products)
-    # nSlides = n//3+ceil((n/3)-(n//3))
-    # 1)
-    # params = {'product': products,
-    #           'no_of_slides': nSlides, 'range': range(nSlides)}
-    # 2)
-    # allprods=[[products,range(1,nSlides),nSlides],
-    #           [products, range(1, nSlides), nSlides]]
     allprods = []
-    # it return all queryset value category in form of list of dictionaries
     catProds = Product.objects.values('category')
     cats = {item['category'] for item in catProds}
     for cat in cats:
@@ -46,6 +35,23 @@ def contact(request):
 
 
 def tracker(request):
+    if request.method == "POST":
+        orderId = request.POST.get('OrderId', '')
+        email = request.POST.get('email', '')
+        try:
+            order=Orders.objects.filter(order_id=orderId,email=email)
+            if len(order)>0:
+                update=OrderUpdate.objects.filter(order_id=orderId)
+                updates=[]
+                for item in update:
+                    updates.append({'text':item.update_desc,'time':item.timestamp})
+                    response=json.dumps(updates)
+                    return HttpResponse(response)
+            else:
+                return HttpResponse('else')
+        except:
+            return HttpResponse('exception')
+
     return render(request, 'shop/tracker.html')
 
 
@@ -71,6 +77,8 @@ def checkout(request):
         phone = request.POST.get('phone', '')
         order = Orders(items_json=items_json,name=name, email=email, phone=phone,address=address, city=city, state=state, zip_code=zip_code)
         order.save()
+        update=OrderUpdate(order_id=order.order_id,update_desc="The order has been placed")
+        update.save()
         thank=True
         id=order.order_id
         return render(request,'shop/checkout.html',{'thank':thank,'id':id})
