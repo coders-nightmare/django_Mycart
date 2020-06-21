@@ -9,47 +9,64 @@
             <h2>Enter your order id and email address to track your order</h2>
             <form method="POST" action="#" id="trackerForm">
                 {% csrf_token %}
-                    <div class="form-group col-md-6">
-                        <label for="OrderId">Order Id</label>
-                        <input type="text" class="form-control" id="OrderId" name="OrderId" placeholder="Order Id">
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Email">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Track Order</button>
-                </form>
-            </div>
+                <div class="form-group col-md-6">
+                    <label for="orderId">Order Id</label>
+                    <input type="text" class="form-control" id="orderId" name="orderId" placeholder="order Id">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                </div>
+                <button type="submit" class="btn btn-primary">Track Order</button>
+            </form>
         </div>
     </div>
-    <div class="row my-5">
-        <div class="col">
-            <h2>Your order status</h2>
-            <ul class="list-group" id="items"></ul>
-        </div>
+</div>
+<div class="row my-5">
+    <div class="col">
+        <h2>Your order status</h2>
+        <ul class="list-group" id="items">
+            Enter your order id and email and click track order to find details about your order!
+        </ul>
     </div>
+</div>
 </div>
 {% endblock %}
 <!-- end  -->
 {%block js%}
 <script>
-$("#trackerForm").submit(function(event){
-    $("#items").empty();
-    var formData={
-        'orderId':$('input[name=orderId]').val(),
-        'email':$('input[name=email]').val(),
-        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
-    };
-    $.ajax({
-        type:'POST',
-        url:'/shop/tracker/',
-        data:formData,
-        encode:true
-    })
-    .done(function(data){
-        console.log(data)
+    $("#trackerForm").submit(function (event) {
+        $("#items").empty();
+        var formData = {
+            'orderId': $('input[name=orderId]').val(),
+            'email': $('input[name=email]').val(),
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/shop/tracker/',
+            data: formData,
+            encode: true
+        })
+            .done(function (data) {
+                console.log(data);
+                updates = JSON.parse(data);
+                if (updates.length > 0 & updates != {}) {
+
+                    for (i = 0; i < updates.length; i++) {
+                        let text = updates[i]['text'];
+                        let time = updates[i]['time'];
+                        mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">${text}
+                    <span class="badge badge-primary badge-pill">${time}</span></li>`;
+                        $('#items').append(mystr);
+                    }
+                }
+                else {
+                    mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">Sorry,we are unable to fetch details please insert correct information</li>`;
+                    $('#items').append(mystr);
+                }
+            });
+        event.preventDefault();
     });
-    event.preventDefault();
-});
 </script>
 {%endblock%}
