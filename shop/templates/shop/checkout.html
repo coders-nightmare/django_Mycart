@@ -9,6 +9,11 @@
             <h2>Step 1- My awesome cart express checkout - review your cart Items</h2>
             <ul class="list-group" id="items">
             </ul>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active" aria-current="page">Your Cart Total Is : <span id="totalPrice"></span></li>
+                </ol>
+            </nav>
         </div>
     </div>
     <div class="row my-5">
@@ -69,7 +74,8 @@ if (localStorage.getItem('cart') == null) {
 else {
     cart = JSON.parse(localStorage.getItem('cart'));
 }
-sum=0;
+var sum=0;
+var totalPrice=0;
 if ($.isEmptyObject(cart)){
     mystr=`<p>Your cart is empty , please add some item before checking out!</p>`;
     $('#items').append(mystr);
@@ -78,13 +84,16 @@ else{
     for (item in cart) {
         let name = cart[item][1];
         let qty = cart[item][0];
+        let itemPrice=cart[item][2];
         sum=sum+qty;
+        totalPrice=totalPrice+qty*itemPrice;
         mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">${name}
         <span class="badge badge-primary badge-pill">${qty}</span></li>`;
         $('#items').append(mystr);
     }
 }
 document.getElementById('cart').innerHTML=sum;
+document.getElementById('totalPrice').innerHTML=totalPrice;
 $('#itemsJson').val(JSON.stringify(cart));
 {%if thank%}
 alert("Thanks for ordering with us ,Your order id is {{id}}.Use order tracker to track your order");
