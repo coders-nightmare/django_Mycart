@@ -5,6 +5,11 @@
         <div class="col-md-8 blog-main">
             <h3 class="pb-4 mb-4 font-italic border-bottom">
                 {{post.title}}
+                <div class="text-right">
+                    <div class="fb-like " data-href="https://developers.facebook.com/docs/plugins/" data-width="" data-layout="button_count"
+                    data-action="like" data-size="small" data-share="true"></div>
+                </div>
+                    
             </h3>
     
             <div class="blog-post">
@@ -17,6 +22,7 @@
                 
                 <h2>{{post.head2}}</h2>
                 <p>{{post.chead2}}</p>
+                <div class="fb-comments" data-href="http://127.0.0.1:8000/blog/blogpost/{{post.post_id}}" data-numposts="5" data-width=""></div>
                 </div><!-- /.blog-post -->
 
         </div><!-- /.blog-main -->
